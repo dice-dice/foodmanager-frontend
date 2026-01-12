@@ -71,11 +71,16 @@ describe('FoodForm', () => {
     const categorySelect = screen.getByLabelText(/カテゴリ/);
     expect(categorySelect).toBeInTheDocument();
 
-    expect(screen.getByText('野菜')).toBeInTheDocument();
     expect(screen.getByText('果物')).toBeInTheDocument();
-    expect(screen.getByText('肉類')).toBeInTheDocument();
-    expect(screen.getByText('魚介類')).toBeInTheDocument();
+    expect(screen.getByText('野菜')).toBeInTheDocument();
+    expect(screen.getByText('肉')).toBeInTheDocument();
+    expect(screen.getByText('魚')).toBeInTheDocument();
     expect(screen.getByText('乳製品')).toBeInTheDocument();
+    expect(screen.getByText('冷蔵')).toBeInTheDocument();
+    expect(screen.getByText('冷凍')).toBeInTheDocument();
+    expect(screen.getByText('常温')).toBeInTheDocument();
+    expect(screen.getByText('飲料')).toBeInTheDocument();
+    expect(screen.getByText('日用品')).toBeInTheDocument();
     expect(screen.getByText('その他')).toBeInTheDocument();
   });
 
