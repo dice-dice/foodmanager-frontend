@@ -1,15 +1,21 @@
 import { Link } from 'react-router-dom';
 import { useOverviewStats } from '../hooks';
-import { STORAGE_CATEGORY_IDS } from '../constants';
+import { CATEGORY_IDS } from '../constants';
 
 export function DashboardPage() {
   const { data: stats, isLoading, error } = useOverviewStats();
 
-  const getStorageCount = (categoryId: number): number => {
+  const getCategoryCount = (categoryId: number): number => {
     if (!stats?.categoryBreakdown) return 0;
     const category = stats.categoryBreakdown.find(c => c.categoryId === categoryId);
     return category?.count || 0;
   };
+
+  // 食材の合計（冷蔵 + 冷凍 + 常温）
+  const foodTotal =
+    getCategoryCount(CATEGORY_IDS.refrigerated) +
+    getCategoryCount(CATEGORY_IDS.frozen) +
+    getCategoryCount(CATEGORY_IDS.roomTemp);
 
   if (isLoading) {
     return (
@@ -35,23 +41,24 @@ export function DashboardPage() {
 
       {/* Overview Cards */}
       <div className="row g-4 mb-4">
-        <div className="col-md-6 col-lg-3">
+        {/* 食材数カード */}
+        <div className="col-md-6 col-lg-4">
           <div className="card bg-primary text-white h-100">
             <div className="card-body">
-              <h5 className="card-title">食材数</h5>
-              <p className="card-text display-4">{stats?.totalFoods || 0}</p>
+              <h5 className="card-title">食材</h5>
+              <p className="card-text display-4">{foodTotal}</p>
               <div className="small mt-2">
                 <div className="d-flex justify-content-between">
                   <span>冷蔵:</span>
-                  <span>{getStorageCount(STORAGE_CATEGORY_IDS.refrigerated)}</span>
+                  <span>{getCategoryCount(CATEGORY_IDS.refrigerated)}</span>
                 </div>
                 <div className="d-flex justify-content-between">
                   <span>冷凍:</span>
-                  <span>{getStorageCount(STORAGE_CATEGORY_IDS.frozen)}</span>
+                  <span>{getCategoryCount(CATEGORY_IDS.frozen)}</span>
                 </div>
                 <div className="d-flex justify-content-between">
                   <span>常温:</span>
-                  <span>{getStorageCount(STORAGE_CATEGORY_IDS.roomTemp)}</span>
+                  <span>{getCategoryCount(CATEGORY_IDS.roomTemp)}</span>
                 </div>
               </div>
             </div>
@@ -63,6 +70,39 @@ export function DashboardPage() {
           </div>
         </div>
 
+        {/* その他カード */}
+        <div className="col-md-6 col-lg-4">
+          <div className="card bg-secondary text-white h-100">
+            <div className="card-body">
+              <h5 className="card-title">その他</h5>
+              <p className="card-text display-4">{getCategoryCount(CATEGORY_IDS.other)}</p>
+            </div>
+            <div className="card-footer bg-transparent border-0">
+              <Link to="/foods" className="text-white">
+                一覧を見る
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* 日用品カード */}
+        <div className="col-md-6 col-lg-4">
+          <div className="card bg-dark text-white h-100">
+            <div className="card-body">
+              <h5 className="card-title">日用品</h5>
+              <p className="card-text display-4">{getCategoryCount(CATEGORY_IDS.daily)}</p>
+            </div>
+            <div className="card-footer bg-transparent border-0">
+              <Link to="/foods" className="text-white">
+                一覧を見る
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 期限・買い物カード */}
+      <div className="row g-4 mb-4">
         <div className="col-md-6 col-lg-3">
           <div className="card bg-warning text-dark h-100">
             <div className="card-body">
@@ -96,27 +136,6 @@ export function DashboardPage() {
           </div>
         </div>
       </div>
-
-      {/* Category Breakdown */}
-      {stats?.categoryBreakdown && stats.categoryBreakdown.length > 0 && (
-        <div className="card">
-          <div className="card-header">
-            <h5 className="mb-0">カテゴリ別食材数</h5>
-          </div>
-          <div className="card-body">
-            <div className="row">
-              {stats.categoryBreakdown.map((cat) => (
-                <div key={cat.categoryId} className="col-6 col-md-4 col-lg-2 mb-3">
-                  <div className="text-center">
-                    <div className="display-6">{cat.count}</div>
-                    <small className="text-muted">{cat.category}</small>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Quick Actions */}
       <div className="mt-4">
