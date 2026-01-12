@@ -17,11 +17,17 @@ export default [
       "react-hooks": reactHooks,
       "@typescript-eslint": ts,
     },
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
     rules: {
       ...js.configs.recommended.rules,
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       ...ts.configs.recommended.rules,
+      "react/react-in-jsx-scope": "off",
     }
   }
 ];
