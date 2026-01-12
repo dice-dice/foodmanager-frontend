@@ -1,5 +1,5 @@
 import type { FoodDTO } from '../types';
-import { getCategoryName } from '../constants';
+import { getCategoryName, isNoExpirationCategory } from '../constants';
 
 interface FoodCardProps {
   food: FoodDTO;
@@ -10,6 +10,9 @@ interface FoodCardProps {
 }
 
 export function FoodCard({ food, onEdit, onDelete, onDone, showExpiration = true }: FoodCardProps) {
+  // その他・日用品カテゴリは期限を表示しない
+  const shouldShowExpiration = showExpiration && !isNoExpirationCategory(food.categoryId);
+
   const getDaysUntilExpiration = () => {
     if (!food.expirationDate) return null;
     const today = new Date();
@@ -39,7 +42,7 @@ export function FoodCard({ food, onEdit, onDelete, onDone, showExpiration = true
       <div className="card-body">
         <div className="d-flex justify-content-between align-items-start">
           <h5 className="card-title mb-1">{food.name}</h5>
-          {showExpiration && getExpirationBadge()}
+          {shouldShowExpiration && getExpirationBadge()}
         </div>
         {(food.categoryId || food.categoryName) && (
           <span className="badge bg-secondary mb-2">
@@ -54,7 +57,7 @@ export function FoodCard({ food, onEdit, onDelete, onDone, showExpiration = true
             <small className="text-muted">登録日: {food.date}</small>
           </p>
         )}
-        {showExpiration && food.expirationDate && (
+        {shouldShowExpiration && food.expirationDate && (
           <p className="card-text mb-0">
             <small className="text-muted">賞味期限: {food.expirationDate}</small>
           </p>
