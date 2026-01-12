@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import type { FoodDTO } from '../types';
 
@@ -47,6 +48,18 @@ export function FoodForm({
       categoryId: initialData?.categoryId,
     },
   });
+
+  useEffect(() => {
+    if (initialData) {
+      reset({
+        name: initialData.name || '',
+        quantity: initialData.quantity || 1,
+        date: initialData.date || today,
+        expirationDate: initialData.expirationDate || '',
+        categoryId: initialData.categoryId,
+      });
+    }
+  }, [initialData, reset, today]);
 
   const handleFormSubmit = (data: FormData) => {
     const foodDTO: FoodDTO = {
