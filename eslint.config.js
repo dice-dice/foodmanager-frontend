@@ -7,10 +7,46 @@ import tsParser from "@typescript-eslint/parser";
 export default [
   {
     files: ["src/**/*.{ts,tsx}"],
+    ignores: ["src/**/*.test.{ts,tsx}"],
     languageOptions: {
       parser: tsParser,
       ecmaVersion: "latest",
       sourceType: "module",
+    },
+    plugins: {
+      react,
+      "react-hooks": reactHooks,
+      "@typescript-eslint": ts,
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
+      ...ts.configs.recommended.rules,
+      "react/react-in-jsx-scope": "off",
+    }
+  },
+  {
+    files: ["src/**/*.test.{ts,tsx}"],
+    languageOptions: {
+      parser: tsParser,
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        describe: "readonly",
+        it: "readonly",
+        expect: "readonly",
+        vi: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+        beforeAll: "readonly",
+        afterAll: "readonly",
+      },
     },
     plugins: {
       react,
