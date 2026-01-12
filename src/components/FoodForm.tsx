@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import type { FoodDTO } from '../types';
+import { CATEGORIES } from '../constants';
 
 interface FoodFormProps {
   onSubmit: (data: FoodDTO) => void;
@@ -16,17 +17,6 @@ interface FormData {
   expirationDate?: string;
   categoryId?: number;
 }
-
-const CATEGORIES = [
-  { id: 1, name: '果物' },
-  { id: 2, name: '野菜' },
-  { id: 3, name: '肉' },
-  { id: 4, name: '魚' },
-  { id: 5, name: '乳製品' },
-  { id: 6, name: '冷凍' },
-  { id: 7, name: '日用品' },
-  { id: 8, name: 'その他' },
-];
 
 export function FoodForm({
   onSubmit,
