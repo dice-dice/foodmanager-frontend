@@ -1,4 +1,5 @@
 import type { FoodDTO } from '../types';
+import { getCategoryName } from '../constants';
 
 interface FoodCardProps {
   food: FoodDTO;
@@ -40,8 +41,10 @@ export function FoodCard({ food, onEdit, onDelete, onDone, showExpiration = true
           <h5 className="card-title mb-1">{food.name}</h5>
           {showExpiration && getExpirationBadge()}
         </div>
-        {food.categoryName && (
-          <span className="badge bg-secondary mb-2">{food.categoryName}</span>
+        {(food.categoryId || food.categoryName) && (
+          <span className="badge bg-secondary mb-2">
+            {getCategoryName(food.categoryId) || food.categoryName}
+          </span>
         )}
         <p className="card-text mb-1">
           <small className="text-muted">数量: {food.quantity}</small>
