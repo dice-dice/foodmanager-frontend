@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useShopping, useCreateShopping, useUpdateShopping, useDeleteShopping, useMoveToFoods } from '../hooks';
-import { FoodCard, FoodForm } from '../components';
+import { FoodCard, FoodForm, ConfirmModal } from '../components';
 import type { FoodDTO } from '../types';
 
 export function ShoppingListPage() {
@@ -12,6 +12,8 @@ export function ShoppingListPage() {
 
   const [showForm, setShowForm] = useState(false);
   const [editingItem, setEditingItem] = useState<FoodDTO | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
+  const [doneTarget, setDoneTarget] = useState<FoodDTO | null>(null);
 
   const handleCreate = (data: FoodDTO) => {
     createItem.mutate([data], {
@@ -30,8 +32,13 @@ export function ShoppingListPage() {
   };
 
   const handleDelete = (id: number) => {
-    if (window.confirm('このアイテムを削除しますか？')) {
-      deleteItem.mutate(id);
+    setDeleteTarget(id);
+  };
+
+  const confirmDelete = () => {
+    if (deleteTarget !== null) {
+      deleteItem.mutate(deleteTarget);
+      setDeleteTarget(null);
     }
   };
 
@@ -41,8 +48,13 @@ export function ShoppingListPage() {
   };
 
   const handleDone = (item: FoodDTO) => {
-    if (window.confirm('冷蔵庫に追加しますか？')) {
-      moveToFoods.mutate(item);
+    setDoneTarget(item);
+  };
+
+  const confirmDone = () => {
+    if (doneTarget !== null) {
+      moveToFoods.mutate(doneTarget);
+      setDoneTarget(null);
     }
   };
 
@@ -141,6 +153,28 @@ export function ShoppingListPage() {
           </button>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={deleteTarget !== null}
+        title="アイテムの削除"
+        message="このアイテムを削除しますか？この操作は取り消せません。"
+        confirmLabel="削除"
+        cancelLabel="キャンセル"
+        confirmVariant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
+
+      <ConfirmModal
+        isOpen={doneTarget !== null}
+        title="冷蔵庫に追加"
+        message={`「${doneTarget?.name}」を冷蔵庫に追加しますか？`}
+        confirmLabel="追加"
+        cancelLabel="キャンセル"
+        confirmVariant="primary"
+        onConfirm={confirmDone}
+        onCancel={() => setDoneTarget(null)}
+      />
     </div>
   );
 }
