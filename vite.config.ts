@@ -6,6 +6,14 @@ export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    environment: 'jsdom'
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts',
+    deps: {
+      optimizer: {
+        web: {
+          include: ['@exodus/bytes', 'html-encoding-sniffer'],
+        },
+      },
+    },
   }
 })
