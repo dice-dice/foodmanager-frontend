@@ -11,7 +11,7 @@ describe('FoodCard', () => {
     date: '2024-01-01',
     expirationDate: '2024-01-10',
     categoryId: 1,
-    categoryName: '果物',
+    categoryName: '冷蔵',
   };
 
   it('食材名が表示される', () => {
@@ -26,7 +26,7 @@ describe('FoodCard', () => {
 
   it('カテゴリが表示される', () => {
     render(<FoodCard food={mockFood} />);
-    expect(screen.getByText('果物')).toBeInTheDocument();
+    expect(screen.getByText('冷蔵')).toBeInTheDocument();
   });
 
   it('登録日が表示される', () => {
