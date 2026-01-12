@@ -1,14 +1,64 @@
-// TODO: Migrate from react-router-dom v5 to v6
-// - Switch -> Routes
-// - Route children -> Route element
-// - Redirect -> Navigate
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Layout, PrivateRoute } from './components';
+import {
+  LoginPage,
+  RegisterPage,
+  DashboardPage,
+  FoodListPage,
+  ShoppingListPage,
+  AboutPage,
+} from './pages';
 
 function App() {
   return (
-    <div className="container mt-3">
-      <h1>Food Manager</h1>
-      <p>App is under migration to Vite + React Router v6</p>
-    </div>
+    <Layout>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+
+        {/* Protected Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <DashboardPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/foods"
+          element={
+            <PrivateRoute>
+              <FoodListPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/shopping"
+          element={
+            <PrivateRoute>
+              <ShoppingListPage />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Default Route */}
+        <Route path="/" element={<Navigate to="/about" replace />} />
+
+        {/* 404 */}
+        <Route
+          path="*"
+          element={
+            <div className="text-center py-5">
+              <h1>404</h1>
+              <p>Page not found</p>
+            </div>
+          }
+        />
+      </Routes>
+    </Layout>
   );
 }
 
