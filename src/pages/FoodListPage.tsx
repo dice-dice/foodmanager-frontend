@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useFoods, useCreateFood, useUpdateFood, useDeleteFood } from '../hooks';
-import { FoodCard, FoodForm } from '../components';
+import { FoodCard, FoodForm, ConfirmModal } from '../components';
 import type { FoodDTO } from '../types';
 
 export function FoodListPage() {
@@ -11,6 +11,7 @@ export function FoodListPage() {
 
   const [showForm, setShowForm] = useState(false);
   const [editingFood, setEditingFood] = useState<FoodDTO | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
 
   const handleCreate = (data: FoodDTO) => {
     createFood.mutate([data], {
@@ -29,8 +30,13 @@ export function FoodListPage() {
   };
 
   const handleDelete = (id: number) => {
-    if (window.confirm('この食材を削除しますか？')) {
-      deleteFood.mutate(id);
+    setDeleteTarget(id);
+  };
+
+  const confirmDelete = () => {
+    if (deleteTarget !== null) {
+      deleteFood.mutate(deleteTarget);
+      setDeleteTarget(null);
     }
   };
 
@@ -127,6 +133,17 @@ export function FoodListPage() {
           </button>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={deleteTarget !== null}
+        title="食材の削除"
+        message="この食材を削除しますか？この操作は取り消せません。"
+        confirmLabel="削除"
+        cancelLabel="キャンセル"
+        confirmVariant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }
