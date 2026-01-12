@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import type { FoodDTO } from '../types';
-import { CATEGORIES } from '../constants';
+import { CATEGORIES, isNoExpirationCategory } from '../constants';
 
 interface FoodFormProps {
   onSubmit: (data: FoodDTO) => void;
@@ -30,6 +30,7 @@ export function FoodForm({
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     defaultValues: {
@@ -52,6 +53,9 @@ export function FoodForm({
       });
     }
   }, [initialData, reset, today]);
+
+  const selectedCategoryId = watch('categoryId');
+  const shouldShowExpiration = showExpiration && !isNoExpirationCategory(Number(selectedCategoryId));
 
   const handleFormSubmit = (data: FormData) => {
     const foodDTO: FoodDTO = {
@@ -112,7 +116,7 @@ export function FoodForm({
         {errors.date && <div className="invalid-feedback">{errors.date.message}</div>}
       </div>
 
-      {showExpiration && (
+      {shouldShowExpiration && (
         <div className="mb-3">
           <label htmlFor="expirationDate" className="form-label">
             賞味期限
