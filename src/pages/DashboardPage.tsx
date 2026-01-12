@@ -1,8 +1,15 @@
 import { Link } from 'react-router-dom';
 import { useOverviewStats } from '../hooks';
+import { STORAGE_CATEGORY_IDS } from '../constants';
 
 export function DashboardPage() {
   const { data: stats, isLoading, error } = useOverviewStats();
+
+  const getStorageCount = (categoryId: number): number => {
+    if (!stats?.categoryBreakdown) return 0;
+    const category = stats.categoryBreakdown.find(c => c.categoryId === categoryId);
+    return category?.count || 0;
+  };
 
   if (isLoading) {
     return (
@@ -33,6 +40,20 @@ export function DashboardPage() {
             <div className="card-body">
               <h5 className="card-title">食材数</h5>
               <p className="card-text display-4">{stats?.totalFoods || 0}</p>
+              <div className="small mt-2">
+                <div className="d-flex justify-content-between">
+                  <span>冷蔵:</span>
+                  <span>{getStorageCount(STORAGE_CATEGORY_IDS.refrigerated)}</span>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <span>冷凍:</span>
+                  <span>{getStorageCount(STORAGE_CATEGORY_IDS.frozen)}</span>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <span>常温:</span>
+                  <span>{getStorageCount(STORAGE_CATEGORY_IDS.roomTemp)}</span>
+                </div>
+              </div>
             </div>
             <div className="card-footer bg-transparent border-0">
               <Link to="/foods" className="text-white">
