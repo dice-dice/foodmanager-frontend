@@ -1,22 +1,22 @@
 import { useState, useMemo } from 'react';
 import { useFoods, useCreateFood, useUpdateFood, useDeleteFood } from '../hooks';
 import { FoodCard, FoodForm, ConfirmModal } from '../components';
-import { isFoodCategory } from '../constants';
+import { isDailyStockCategory } from '../constants';
 import type { FoodDTO } from '../types';
 
-export function FoodListPage() {
+export function DailyStockPage() {
   const { data: allFoods, isLoading, error } = useFoods();
   const createFood = useCreateFood();
   const updateFood = useUpdateFood();
   const deleteFood = useDeleteFood();
 
-  // 冷蔵・冷凍・常温のみフィルター
-  const foods = useMemo(() => {
-    return allFoods?.filter(food => isFoodCategory(food.categoryId)) || [];
+  // 日用品・その他のみフィルター
+  const items = useMemo(() => {
+    return allFoods?.filter(food => isDailyStockCategory(food.categoryId)) || [];
   }, [allFoods]);
 
   const [showForm, setShowForm] = useState(false);
-  const [editingFood, setEditingFood] = useState<FoodDTO | null>(null);
+  const [editingItem, setEditingItem] = useState<FoodDTO | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
 
   const handleCreate = (data: FoodDTO) => {
@@ -30,7 +30,7 @@ export function FoodListPage() {
   const handleUpdate = (data: FoodDTO) => {
     updateFood.mutate([data], {
       onSuccess: () => {
-        setEditingFood(null);
+        setEditingItem(null);
       },
     });
   };
@@ -46,8 +46,8 @@ export function FoodListPage() {
     }
   };
 
-  const handleEdit = (food: FoodDTO) => {
-    setEditingFood(food);
+  const handleEdit = (item: FoodDTO) => {
+    setEditingItem(item);
     setShowForm(false);
   };
 
@@ -64,7 +64,7 @@ export function FoodListPage() {
   if (error) {
     return (
       <div className="alert alert-danger">
-        食材の読み込みに失敗しました。もう一度お試しください。
+        データの読み込みに失敗しました。もう一度お試しください。
       </div>
     );
   }
@@ -72,15 +72,15 @@ export function FoodListPage() {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>食材ストック</h1>
+        <h1>日用品ストック</h1>
         <button
           className="btn btn-primary"
           onClick={() => {
             setShowForm(!showForm);
-            setEditingFood(null);
+            setEditingItem(null);
           }}
         >
-          {showForm ? 'キャンセル' : '食材を追加'}
+          {showForm ? 'キャンセル' : 'アイテムを追加'}
         </button>
       </div>
 
@@ -88,22 +88,22 @@ export function FoodListPage() {
       {showForm && (
         <div className="card mb-4">
           <div className="card-header">
-            <h5 className="mb-0">新しい食材を追加</h5>
+            <h5 className="mb-0">新しいアイテムを追加</h5>
           </div>
           <div className="card-body">
-            <FoodForm onSubmit={handleCreate} submitLabel="追加" />
+            <FoodForm onSubmit={handleCreate} showExpiration={false} submitLabel="追加" />
           </div>
         </div>
       )}
 
       {/* Edit Form */}
-      {editingFood && (
+      {editingItem && (
         <div className="card mb-4">
           <div className="card-header d-flex justify-content-between align-items-center">
-            <h5 className="mb-0">食材を編集</h5>
+            <h5 className="mb-0">アイテムを編集</h5>
             <button
               className="btn btn-sm btn-outline-secondary"
-              onClick={() => setEditingFood(null)}
+              onClick={() => setEditingItem(null)}
             >
               キャンセル
             </button>
@@ -111,39 +111,41 @@ export function FoodListPage() {
           <div className="card-body">
             <FoodForm
               onSubmit={handleUpdate}
-              initialData={editingFood}
+              initialData={editingItem}
+              showExpiration={false}
               submitLabel="更新"
             />
           </div>
         </div>
       )}
 
-      {/* Food List */}
-      {foods.length > 0 ? (
+      {/* Item List */}
+      {items.length > 0 ? (
         <div className="row g-3">
-          {foods.map((food) => (
-            <div key={food.id} className="col-md-6 col-lg-4">
+          {items.map((item) => (
+            <div key={item.id} className="col-md-6 col-lg-4">
               <FoodCard
-                food={food}
+                food={item}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                showExpiration={false}
               />
             </div>
           ))}
         </div>
       ) : (
         <div className="text-center py-5">
-          <p className="text-muted">登録されている食材はありません。</p>
+          <p className="text-muted">登録されているアイテムはありません。</p>
           <button className="btn btn-primary" onClick={() => setShowForm(true)}>
-            最初の食材を追加
+            最初のアイテムを追加
           </button>
         </div>
       )}
 
       <ConfirmModal
         isOpen={deleteTarget !== null}
-        title="食材の削除"
-        message="この食材を削除しますか？この操作は取り消せません。"
+        title="アイテムの削除"
+        message="このアイテムを削除しますか？この操作は取り消せません。"
         confirmLabel="削除"
         cancelLabel="キャンセル"
         confirmVariant="danger"

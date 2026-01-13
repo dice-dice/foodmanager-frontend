@@ -65,9 +65,14 @@ describe('Navbar', () => {
       expect(screen.getByText('ダッシュボード')).toBeInTheDocument();
     });
 
-    it('冷蔵庫リンクが表示される', () => {
+    it('食材ストックリンクが表示される', () => {
       renderNavbar(true);
-      expect(screen.getByText('冷蔵庫')).toBeInTheDocument();
+      expect(screen.getByText('食材ストック')).toBeInTheDocument();
+    });
+
+    it('日用品ストックリンクが表示される', () => {
+      renderNavbar(true);
+      expect(screen.getByText('日用品ストック')).toBeInTheDocument();
     });
 
     it('買い物リストリンクが表示される', () => {

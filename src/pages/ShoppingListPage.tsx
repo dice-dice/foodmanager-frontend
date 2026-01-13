@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useShopping, useCreateShopping, useUpdateShopping, useDeleteShopping, useMoveToFoods } from '../hooks';
 import { FoodCard, FoodForm, ConfirmModal } from '../components';
+import { isDailyStockCategory } from '../constants';
 import type { FoodDTO } from '../types';
 
 export function ShoppingListPage() {
@@ -167,8 +168,8 @@ export function ShoppingListPage() {
 
       <ConfirmModal
         isOpen={doneTarget !== null}
-        title="冷蔵庫に追加"
-        message={`「${doneTarget?.name}」を冷蔵庫に追加しますか？`}
+        title={isDailyStockCategory(doneTarget?.categoryId) ? '日用品ストックに追加' : '食材ストックに追加'}
+        message={`「${doneTarget?.name}」を${isDailyStockCategory(doneTarget?.categoryId) ? '日用品ストック' : '食材ストック'}に追加しますか？`}
         confirmLabel="追加"
         cancelLabel="キャンセル"
         confirmVariant="primary"

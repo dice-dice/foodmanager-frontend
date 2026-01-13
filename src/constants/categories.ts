@@ -37,3 +37,13 @@ export function isNoExpirationCategory(categoryId: number | undefined): boolean 
   if (!categoryId) return false;
   return NO_EXPIRATION_CATEGORY_IDS.includes(categoryId as typeof NO_EXPIRATION_CATEGORY_IDS[number]);
 }
+
+export function isFoodCategory(categoryId: number | undefined): boolean {
+  if (!categoryId) return false;
+  return FOOD_CATEGORY_IDS.includes(categoryId as typeof FOOD_CATEGORY_IDS[number]);
+}
+
+export function isDailyStockCategory(categoryId: number | undefined): boolean {
+  if (!categoryId) return false;
+  return NO_EXPIRATION_CATEGORY_IDS.includes(categoryId as typeof NO_EXPIRATION_CATEGORY_IDS[number]);
+}
