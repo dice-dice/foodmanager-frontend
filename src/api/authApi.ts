@@ -1,7 +1,7 @@
 import apiClient from './axios';
 import type { LoginRequest, SignupRequest, JwtResponse, MessageResponse } from '../types';
 
-const AUTH_URL = '/api/auth';
+const AUTH_URL = '/auth';
 
 export const authApi = {
   signin: async (data: LoginRequest): Promise<JwtResponse> => {

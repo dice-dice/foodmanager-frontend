@@ -6,7 +6,7 @@ import type {
   CategoryBreakdownDTO,
 } from '../types';
 
-const STATS_URL = '/api/stats';
+const STATS_URL = '/stats';
 
 export const statsApi = {
   getOverview: async (): Promise<OverviewStatsDTO> => {

@@ -1,7 +1,7 @@
 import apiClient from './axios';
 import type { FoodDTO } from '../types';
 
-const FOOD_URL = '/api/food';
+const FOOD_URL = '/food';
 
 export const foodApi = {
   getByUser: async (): Promise<FoodDTO[]> => {
