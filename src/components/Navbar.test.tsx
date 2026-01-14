@@ -70,6 +70,11 @@ describe('Navbar', () => {
       expect(screen.getByText('食材ストック')).toBeInTheDocument();
     });
 
+    it('その他ストックリンクが表示される', () => {
+      renderNavbar(true);
+      expect(screen.getByText('その他ストック')).toBeInTheDocument();
+    });
+
     it('日用品ストックリンクが表示される', () => {
       renderNavbar(true);
       expect(screen.getByText('日用品ストック')).toBeInTheDocument();

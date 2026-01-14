@@ -1,8 +1,15 @@
 import { useState } from 'react';
 import { useShopping, useCreateShopping, useUpdateShopping, useDeleteShopping, useMoveToFoods } from '../hooks';
 import { FoodCard, FoodForm, ConfirmModal } from '../components';
-import { isDailyStockCategory } from '../constants';
+import { isOtherCategory, isDailyCategory } from '../constants';
 import type { FoodDTO } from '../types';
+
+// カテゴリに応じたストック名を取得
+const getStockName = (categoryId: number | undefined): string => {
+  if (isOtherCategory(categoryId)) return 'その他ストック';
+  if (isDailyCategory(categoryId)) return '日用品ストック';
+  return '食材ストック';
+};
 
 export function ShoppingListPage() {
   const { data: items, isLoading, error } = useShopping();
@@ -168,8 +175,8 @@ export function ShoppingListPage() {
 
       <ConfirmModal
         isOpen={doneTarget !== null}
-        title={isDailyStockCategory(doneTarget?.categoryId) ? '日用品ストックに追加' : '食材ストックに追加'}
-        message={`「${doneTarget?.name}」を${isDailyStockCategory(doneTarget?.categoryId) ? '日用品ストック' : '食材ストック'}に追加しますか？`}
+        title={`${getStockName(doneTarget?.categoryId)}に追加`}
+        message={`「${doneTarget?.name}」を${getStockName(doneTarget?.categoryId)}に追加しますか？`}
         confirmLabel="追加"
         cancelLabel="キャンセル"
         confirmVariant="primary"

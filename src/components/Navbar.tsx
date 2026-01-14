@@ -47,6 +47,11 @@ export function Navbar() {
                   </Link>
                 </li>
                 <li className="nav-item">
+                  <Link className="nav-link" to="/other-stock">
+                    その他ストック
+                  </Link>
+                </li>
+                <li className="nav-item">
                   <Link className="nav-link" to="/daily-stock">
                     日用品ストック
                   </Link>

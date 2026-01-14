@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { shoppingApi, foodApi } from '../api';
-import { isDailyStockCategory } from '../constants';
+import { isOtherCategory, isDailyCategory } from '../constants';
 import type { FoodDTO } from '../types';
 import toast from 'react-hot-toast';
 
@@ -88,7 +88,12 @@ export function useMoveToFoods() {
       queryClient.invalidateQueries({ queryKey: SHOPPING_KEY });
       queryClient.invalidateQueries({ queryKey: ['foods'] });
       queryClient.invalidateQueries({ queryKey: ['stats'] });
-      const stockName = isDailyStockCategory(food.categoryId) ? '日用品ストック' : '食材ストック';
+      let stockName = '食材ストック';
+      if (isOtherCategory(food.categoryId)) {
+        stockName = 'その他ストック';
+      } else if (isDailyCategory(food.categoryId)) {
+        stockName = '日用品ストック';
+      }
       toast.success(`${stockName}に追加しました`);
     },
     onError: () => {
