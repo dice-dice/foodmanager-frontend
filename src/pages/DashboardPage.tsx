@@ -78,7 +78,7 @@ export function DashboardPage() {
               <p className="card-text display-4">{getCategoryCount(CATEGORY_IDS.other)}</p>
             </div>
             <div className="card-footer bg-transparent border-0">
-              <Link to="/foods" className="text-white">
+              <Link to="/daily-stock" className="text-white">
                 一覧を見る
               </Link>
             </div>
@@ -93,7 +93,7 @@ export function DashboardPage() {
               <p className="card-text display-4">{getCategoryCount(CATEGORY_IDS.daily)}</p>
             </div>
             <div className="card-footer bg-transparent border-0">
-              <Link to="/foods" className="text-white">
+              <Link to="/daily-stock" className="text-white">
                 一覧を見る
               </Link>
             </div>

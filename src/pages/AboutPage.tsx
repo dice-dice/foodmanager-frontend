@@ -14,7 +14,7 @@ export function AboutPage() {
             <div className="card-body">
               <h5 className="card-title">このアプリでできること</h5>
               <p className="card-text">
-                食材管理アプリは、冷蔵庫の中身を簡単に管理し、食品ロスを減らすためのアプリです。
+                食材管理アプリは、食材を簡単に管理し、食品ロスを減らすためのアプリです。
                 賞味期限の管理や買い物リストの作成をサポートします。
               </p>
             </div>
@@ -25,7 +25,7 @@ export function AboutPage() {
               <h5 className="card-title">主な機能</h5>
               <ul className="list-unstyled">
                 <li className="mb-3">
-                  <strong>冷蔵庫管理</strong>
+                  <strong>食材ストック管理</strong>
                   <p className="text-muted mb-0">
                     食材の登録、編集、削除ができます。カテゴリ別に整理して管理できます。
                   </p>
@@ -39,7 +39,7 @@ export function AboutPage() {
                 <li className="mb-3">
                   <strong>買い物リスト</strong>
                   <p className="text-muted mb-0">
-                    買いたい食材をリストに追加。購入後は「完了」ボタンで冷蔵庫に移動できます。
+                    買いたい食材をリストに追加。購入後は「完了」ボタンで食材ストックに移動できます。
                   </p>
                 </li>
                 <li className="mb-3">
@@ -57,10 +57,10 @@ export function AboutPage() {
               <h5 className="card-title">使い方</h5>
               <ol className="mb-0">
                 <li className="mb-2">アカウントを作成してログインします</li>
-                <li className="mb-2">「冷蔵庫」から食材を登録します</li>
+                <li className="mb-2">「食材ストック」から食材を登録します</li>
                 <li className="mb-2">賞味期限を設定して期限管理を行います</li>
                 <li className="mb-2">「買い物リスト」で買い物の計画を立てます</li>
-                <li className="mb-2">購入したら「完了」で冷蔵庫に追加します</li>
+                <li className="mb-2">購入したら「完了」で食材ストックに追加します</li>
               </ol>
             </div>
           </div>
