@@ -7,6 +7,7 @@ import {
   FoodListPage,
   ShoppingListPage,
   DailyStockPage,
+  OtherStockPage,
   AboutPage,
 } from './pages';
 
@@ -49,6 +50,14 @@ function App() {
           element={
             <PrivateRoute>
               <DailyStockPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/other-stock"
+          element={
+            <PrivateRoute>
+              <OtherStockPage />
             </PrivateRoute>
           }
         />

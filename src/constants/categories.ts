@@ -47,3 +47,13 @@ export function isDailyStockCategory(categoryId: number | undefined): boolean {
   if (!categoryId) return false;
   return NO_EXPIRATION_CATEGORY_IDS.includes(categoryId as typeof NO_EXPIRATION_CATEGORY_IDS[number]);
 }
+
+export function isOtherCategory(categoryId: number | undefined): boolean {
+  if (!categoryId) return false;
+  return categoryId === CATEGORY_IDS.other;
+}
+
+export function isDailyCategory(categoryId: number | undefined): boolean {
+  if (!categoryId) return false;
+  return categoryId === CATEGORY_IDS.daily;
+}

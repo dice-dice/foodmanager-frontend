@@ -1,18 +1,18 @@
 import { useState, useMemo } from 'react';
 import { useFoods, useCreateFood, useUpdateFood, useDeleteFood } from '../hooks';
 import { FoodCard, FoodForm, ConfirmModal } from '../components';
-import { isDailyCategory } from '../constants';
+import { isOtherCategory } from '../constants';
 import type { FoodDTO } from '../types';
 
-export function DailyStockPage() {
+export function OtherStockPage() {
   const { data: allFoods, isLoading, error } = useFoods();
   const createFood = useCreateFood();
   const updateFood = useUpdateFood();
   const deleteFood = useDeleteFood();
 
-  // 日用品のみフィルター
+  // その他のみフィルター
   const items = useMemo(() => {
-    return allFoods?.filter(food => isDailyCategory(food.categoryId)) || [];
+    return allFoods?.filter(food => isOtherCategory(food.categoryId)) || [];
   }, [allFoods]);
 
   const [showForm, setShowForm] = useState(false);
@@ -72,7 +72,7 @@ export function DailyStockPage() {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>日用品ストック</h1>
+        <h1>その他ストック</h1>
         <button
           className="btn btn-primary"
           onClick={() => {
