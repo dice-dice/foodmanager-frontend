@@ -1,6 +1,6 @@
 # Food Manager Frontend
 
-url:https://recipe-mini-eikg.vercel.app/
+url:https://www.food-manager.jp/
 
 食材・日用品を管理するWebアプリケーションのフロントエンドです。
 
