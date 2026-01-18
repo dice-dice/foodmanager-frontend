@@ -54,6 +54,105 @@ docker build -t food-manager-frontend .
 docker run -p 80:80 food-manager-frontend
 ```
 
+## CI/CD (GitHub Actions)
+
+GitHub Actionsを使用して、mainブランチへのpush時に自動でビルド・デプロイを実行します。
+
+### VPS構成
+
+```
+VPS ~/food-manager-v2/
+├── docker-compose.yml  (手動配置)
+├── frontend/           → GitHub: foodmanager-frontend
+└── backend/            → GitHub: foodmanager-backend
+```
+
+### セットアップ手順
+
+#### 1. ローカルプロジェクトにワークフロー作成
+
+`.github/workflows/ci.yml` を作成
+
+#### 2. VPS側でSSH鍵を作成
+
+```bash
+# 鍵を生成
+ssh-keygen -t ed25519 -C "github-actions" -f ~/.ssh/id_ed25519_github_actions
+
+# 公開鍵をVPS許可リストに登録
+cat ~/.ssh/id_ed25519_github_actions.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+```
+
+#### 3. GitHub Secretsに登録
+
+リポジトリの **Settings → Secrets and variables → Actions → New repository secret** で以下を登録：
+
+| Name | Value |
+|------|-------|
+| `VPS_HOST` | VPSのIPアドレス |
+| `VPS_USER` | SSHユーザー名 |
+| `SSH_PRIVATE_KEY` | 秘密鍵の中身（`cat ~/.ssh/id_ed25519_github_actions`） |
+
+#### 4. ワークフローの内容
+
+```yaml
+name: CI and Deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+      - name: Deploy on VPS
+        run: |
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            set -e
+            git config --global --add safe.directory /home/daisuke/food-manager-v2/frontend
+            cd /home/daisuke/food-manager-v2/frontend
+            git fetch origin main
+            git reset --hard origin/main
+            cd /home/daisuke/food-manager-v2
+            docker compose up -d --build
+          EOF
+```
+
+### デプロイフロー
+
+```
+push → build (CI) → 成功 → deploy (VPS) → docker compose up
+```
+
+- `needs: build` により、ビルド成功後にのみデプロイが実行されます
+- `git reset --hard` を使用することで、force push後も安定してデプロイできます
+
 ## ディレクトリ構成
 
 ```
