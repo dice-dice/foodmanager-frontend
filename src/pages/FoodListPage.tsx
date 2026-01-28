@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useFoods, useCreateFood, useUpdateFood, useDeleteFood } from '../hooks';
 import { FoodCard, FoodForm, ConfirmModal } from '../components';
-import { isFoodCategory } from '../constants';
+import { isFoodCategory, FOOD_CATEGORIES } from '../constants';
 import type { FoodDTO } from '../types';
 
 export function FoodListPage() {
@@ -91,7 +91,7 @@ export function FoodListPage() {
             <h5 className="mb-0">新しい食材を追加</h5>
           </div>
           <div className="card-body">
-            <FoodForm onSubmit={handleCreate} submitLabel="追加" />
+            <FoodForm onSubmit={handleCreate} submitLabel="追加" availableCategories={FOOD_CATEGORIES} />
           </div>
         </div>
       )}
@@ -113,6 +113,7 @@ export function FoodListPage() {
               onSubmit={handleUpdate}
               initialData={editingFood}
               submitLabel="更新"
+              availableCategories={FOOD_CATEGORIES}
             />
           </div>
         </div>

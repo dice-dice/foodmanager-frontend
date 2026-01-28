@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useFoods, useCreateFood, useUpdateFood, useDeleteFood } from '../hooks';
 import { FoodCard, FoodForm, ConfirmModal } from '../components';
-import { isDailyCategory } from '../constants';
+import { isDailyCategory, CATEGORY_IDS } from '../constants';
 import type { FoodDTO } from '../types';
 
 export function DailyStockPage() {
@@ -91,7 +91,7 @@ export function DailyStockPage() {
             <h5 className="mb-0">新しいアイテムを追加</h5>
           </div>
           <div className="card-body">
-            <FoodForm onSubmit={handleCreate} showExpiration={false} submitLabel="追加" />
+            <FoodForm onSubmit={handleCreate} showExpiration={false} submitLabel="追加" fixedCategoryId={CATEGORY_IDS.daily} />
           </div>
         </div>
       )}
@@ -114,6 +114,7 @@ export function DailyStockPage() {
               initialData={editingItem}
               showExpiration={false}
               submitLabel="更新"
+              fixedCategoryId={CATEGORY_IDS.daily}
             />
           </div>
         </div>

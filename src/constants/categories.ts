@@ -21,6 +21,11 @@ export const FOOD_CATEGORY_IDS = [
   CATEGORY_IDS.roomTemp,
 ] as const;
 
+// 食材カテゴリのリスト（フォーム用）
+export const FOOD_CATEGORIES = CATEGORIES.filter(c =>
+  FOOD_CATEGORY_IDS.includes(c.id as typeof FOOD_CATEGORY_IDS[number])
+);
+
 // 期限を付与しないカテゴリ
 export const NO_EXPIRATION_CATEGORY_IDS = [
   CATEGORY_IDS.other,

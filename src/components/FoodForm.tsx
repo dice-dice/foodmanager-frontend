@@ -3,11 +3,18 @@ import { useForm } from 'react-hook-form';
 import type { FoodDTO } from '../types';
 import { CATEGORIES, isNoExpirationCategory } from '../constants';
 
+interface CategoryOption {
+  id: number;
+  name: string;
+}
+
 interface FoodFormProps {
   onSubmit: (data: FoodDTO) => void;
   initialData?: FoodDTO;
   showExpiration?: boolean;
   submitLabel?: string;
+  availableCategories?: CategoryOption[];
+  fixedCategoryId?: number;
 }
 
 interface FormData {
@@ -23,8 +30,13 @@ export function FoodForm({
   initialData,
   showExpiration = true,
   submitLabel = '保存',
+  availableCategories,
+  fixedCategoryId,
 }: FoodFormProps) {
   const today = new Date().toISOString().split('T')[0];
+
+  const categoriesToShow = availableCategories || CATEGORIES;
+  const defaultCategoryId = fixedCategoryId ?? initialData?.categoryId ?? availableCategories?.[0]?.id;
 
   const {
     register,
@@ -38,7 +50,7 @@ export function FoodForm({
       quantity: initialData?.quantity || 1,
       date: initialData?.date || today,
       expirationDate: initialData?.expirationDate || '',
-      categoryId: initialData?.categoryId,
+      categoryId: defaultCategoryId,
     },
   });
 
@@ -49,10 +61,10 @@ export function FoodForm({
         quantity: initialData.quantity || 1,
         date: initialData.date || today,
         expirationDate: initialData.expirationDate || '',
-        categoryId: initialData.categoryId,
+        categoryId: fixedCategoryId ?? initialData.categoryId,
       });
     }
-  }, [initialData, reset, today]);
+  }, [initialData, reset, today, fixedCategoryId]);
 
   const selectedCategoryId = watch('categoryId');
   const shouldShowExpiration = showExpiration && !isNoExpirationCategory(Number(selectedCategoryId));
@@ -130,19 +142,22 @@ export function FoodForm({
         </div>
       )}
 
-      <div className="mb-3">
-        <label htmlFor="categoryId" className="form-label">
-          カテゴリ
-        </label>
-        <select className="form-select" id="categoryId" {...register('categoryId')}>
-          <option value="">カテゴリを選択</option>
-          {CATEGORIES.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      {fixedCategoryId !== undefined ? (
+        <input type="hidden" {...register('categoryId')} value={fixedCategoryId} />
+      ) : (
+        <div className="mb-3">
+          <label htmlFor="categoryId" className="form-label">
+            カテゴリ
+          </label>
+          <select className="form-select" id="categoryId" {...register('categoryId')}>
+            {categoriesToShow.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
         {isSubmitting ? '保存中...' : submitLabel}
