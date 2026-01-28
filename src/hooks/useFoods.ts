@@ -28,10 +28,10 @@ export function useCreateFood() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: FOODS_KEY });
       queryClient.invalidateQueries({ queryKey: ['stats'] });
-      toast.success('食材を追加しました');
+      toast.success('追加しました');
     },
     onError: () => {
-      toast.error('食材の追加に失敗しました');
+      toast.error('追加に失敗しました');
     },
   });
 }
@@ -44,10 +44,10 @@ export function useUpdateFood() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: FOODS_KEY });
       queryClient.invalidateQueries({ queryKey: ['stats'] });
-      toast.success('食材を更新しました');
+      toast.success('更新しました');
     },
     onError: () => {
-      toast.error('食材の更新に失敗しました');
+      toast.error('更新に失敗しました');
     },
   });
 }
@@ -60,10 +60,10 @@ export function useDeleteFood() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: FOODS_KEY });
       queryClient.invalidateQueries({ queryKey: ['stats'] });
-      toast.success('食材を削除しました');
+      toast.success('削除しました');
     },
     onError: () => {
-      toast.error('食材の削除に失敗しました');
+      toast.error('削除に失敗しました');
     },
   });
 }
