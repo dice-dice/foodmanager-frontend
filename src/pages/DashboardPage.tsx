@@ -114,12 +114,14 @@ export function DashboardPage() {
         </div>
 
         <div className="col-md-6 col-lg-3">
-          <div className="card bg-danger text-white h-100">
-            <div className="card-body">
-              <h5 className="card-title">期限切れ</h5>
-              <p className="card-text display-4">{stats?.expiredCount || 0}</p>
+          <Link to="/foods?filter=expired" className="text-decoration-none">
+            <div className="card bg-danger text-white h-100">
+              <div className="card-body">
+                <h5 className="card-title">期限切れ</h5>
+                <p className="card-text display-4">{stats?.expiredCount || 0}</p>
+              </div>
             </div>
-          </div>
+          </Link>
         </div>
 
         <div className="col-md-6 col-lg-3">

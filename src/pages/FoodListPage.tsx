@@ -1,19 +1,33 @@
 import { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useFoods, useCreateFood, useUpdateFood, useDeleteFood } from '../hooks';
 import { FoodCard, FoodForm, ConfirmModal } from '../components';
 import { isFoodCategory, FOOD_CATEGORIES } from '../constants';
 import type { FoodDTO } from '../types';
 
 export function FoodListPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const filter = searchParams.get('filter');
+  const isExpiredFilter = filter === 'expired';
+
   const { data: allFoods, isLoading, error } = useFoods();
   const createFood = useCreateFood();
   const updateFood = useUpdateFood();
   const deleteFood = useDeleteFood();
 
-  // 冷蔵・冷凍・常温のみフィルター
+  // 冷蔵・冷凍・常温のみフィルター + 期限切れフィルター
   const foods = useMemo(() => {
-    return allFoods?.filter(food => isFoodCategory(food.categoryId)) || [];
-  }, [allFoods]);
+    let filtered = allFoods?.filter(food => isFoodCategory(food.categoryId)) || [];
+
+    if (isExpiredFilter) {
+      const today = new Date().toISOString().split('T')[0];
+      filtered = filtered.filter(food =>
+        food.expirationDate && food.expirationDate < today
+      );
+    }
+
+    return filtered;
+  }, [allFoods, isExpiredFilter]);
 
   const [showForm, setShowForm] = useState(false);
   const [editingFood, setEditingFood] = useState<FoodDTO | null>(null);
@@ -72,7 +86,17 @@ export function FoodListPage() {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>食材ストック</h1>
+        <div>
+          <h1>{isExpiredFilter ? '期限切れの食材' : '食材ストック'}</h1>
+          {isExpiredFilter && (
+            <button
+              className="btn btn-outline-secondary btn-sm mt-2"
+              onClick={() => setSearchParams({})}
+            >
+              フィルターを解除
+            </button>
+          )}
+        </div>
         <button
           className="btn btn-primary"
           onClick={() => {
@@ -134,10 +158,14 @@ export function FoodListPage() {
         </div>
       ) : (
         <div className="text-center py-5">
-          <p className="text-muted">登録されている食材はありません。</p>
-          <button className="btn btn-primary" onClick={() => setShowForm(true)}>
-            最初の食材を追加
-          </button>
+          <p className="text-muted">
+            {isExpiredFilter ? '期限切れの食材はありません。' : '登録されている食材はありません。'}
+          </p>
+          {!isExpiredFilter && (
+            <button className="btn btn-primary" onClick={() => setShowForm(true)}>
+              最初の食材を追加
+            </button>
+          )}
         </div>
       )}
 
